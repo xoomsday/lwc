@@ -1,0 +1,54 @@
+body {
+    background-color: #000;
+    margin: 0px;
+    padding: 0px;
+}
+div.wc-local {
+    text-align: left;
+    color: #ccc;
+    background-color: #222;
+    font-family: monospace;
+}
+div.wc-local-clock {
+    padding: 15px;
+    font-size: 60pt;
+}
+div.wc-local-date {
+    padding: 0px 15px 15px;
+    font-size: 16pt;
+}
+div.wc {
+    position: relative;
+    padding: 20px;
+    margin: 2px;
+    height: 80px;
+    color: #ccc;
+    background-color: #222;
+    font-family: monospace;
+}
+div.wc > div.wc-l {
+    position: absolute;
+    width: 50%;
+    left: 20px;
+}
+div.wc > div.wc-l > div.wc-tz-name {
+    font-size: 16pt;
+    text-align: left;
+}
+div.wc > div.wc-l > div.wc-tz-ofs {
+    font-size: 12pt;
+    text-align: left;
+}
+div.wc > div.wc-l > div.wc-tz-id {
+    font-size: 12pt;
+    text-align: left;
+}
+div.wc > div.wc-r {
+    position: absolute;
+    width: 50%;
+    right: 20px;
+}
+div.wc > div.wc-r > div.wc-time {
+    font-size: 40pt;
+    text-align: right;
+}
