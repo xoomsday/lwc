@@ -1,0 +1,16 @@
+{
+    "name": "Local World Clock",
+    "short_name": "LWC",
+    "start_url": "LocalWorldClock.html",
+    "scope": "./",
+    "icons": [
+	{
+	    "src": "LWC.png",
+	    "sizes": "512x512",
+	    "type": "image/png"
+	}
+    ],
+    "theme_color": "#222",
+    "background_color": "#222",
+    "display": "standalone"
+}
