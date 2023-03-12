@@ -89,8 +89,8 @@ const SAMPLE = [
     {name: "東京", id: "Asia/Tokyo", gmtofs: "GMT+0900" },
     {name: "ロンドン", id: "Europe/London", gmtofs: "GMT+0000" }, // "GMT+0100"
     {name: "UTC", id: "UTC", gmtofs: "GMT" },
-    {name: "ニューヨーク", id: "America/New_York", gmtofs: "GMT-0500" }, // GMT-0400
-    {name: "ロサンゼルス", id: "America/Los_Angeles", gmtofs: "GMT-0800" }, // GMT-0700
+    {name: "ニューヨーク", id: "America/New_York", gmtofs: "GMT-0400" }, // GMT-0500
+    {name: "ロサンゼルス", id: "America/Los_Angeles", gmtofs: "GMT-0700" }, // GMT-0800
 ];
 
 function new_elem_class_in(elemName, className, parent)
