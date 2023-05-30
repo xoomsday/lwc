@@ -87,7 +87,7 @@ function redraw_clock()
 
 const SAMPLE = [
     {name: "東京", id: "Asia/Tokyo", gmtofs: "GMT+0900" },
-    {name: "ロンドン", id: "Europe/London", gmtofs: "GMT+0000" }, // "GMT+0100"
+    {name: "ロンドン", id: "Europe/London", gmtofs: "GMT+0100" }, // "GMT+0000"
     {name: "UTC", id: "UTC", gmtofs: "GMT" },
     {name: "ニューヨーク", id: "America/New_York", gmtofs: "GMT-0400" }, // GMT-0500
     {name: "ロサンゼルス", id: "America/Los_Angeles", gmtofs: "GMT-0700" }, // GMT-0800
