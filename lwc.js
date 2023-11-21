@@ -1,7 +1,7 @@
 // Will be revamped when Temporal becomes available
-function parse_offset(gmtofs)
+function parse_offset(tzrow)
 {
-    var match = gmtofs.match(/^GMT([-+])([0-9]{2})([0-9]{2})$/);
+    var match = tzrow.gmtofs.match(/^GMT([-+])([0-9]{2})([0-9]{2})$/);
     if (!match)
         return 0;
     var sign = match[1];
@@ -112,7 +112,7 @@ function create_wc_widget(tzrow, localofs, now, parent)
 
     // Will be used to sort "wc"s later
     // Will be revamped when Temporal becomes available
-    wc.myoffset = parse_offset(tzrow.gmtofs);
+    wc.myoffset = parse_offset(tzrow);
 
     wc_tz_name.textContent = tzrow.name;
     wc_tz_ofs.textContent = relative_offset_string(wc.myoffset, localofs);
