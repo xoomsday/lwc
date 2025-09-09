@@ -1,4 +1,4 @@
-var CACHE = 'lwc-cache-2025';
+var CACHE = 'lwc-cache-25';
 
 self.addEventListener('install', event => {
     event.waitUntil(precache());

@@ -52,3 +52,57 @@ div.wc > div.wc-r > div.wc-time {
     font-size: 40pt;
     text-align: right;
 }
+
+.settings-icon {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    font-size: 24pt;
+    cursor: pointer;
+    color: #ccc;
+}
+
+#settings-panel {
+    padding: 20px;
+    background-color: #333;
+    border-top: 1px solid #444;
+}
+
+#settings-panel.hidden {
+    display: none;
+}
+
+#settings-panel input, #settings-panel button {
+    font-size: 12pt;
+    margin: 5px;
+}
+
+#settings-panel p {
+    color: #ccc;
+}
+
+.remove-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: #500;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    display: none;
+}
+
+#wc-list.edit-mode .remove-button {
+    display: block;
+}
+
+.wc.dragging {
+    opacity: 0.5;
+}
+
+.wc.over {
+    border: 2px dashed #ccc;
+}

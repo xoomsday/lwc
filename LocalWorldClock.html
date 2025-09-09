@@ -1,10 +1,10 @@
 <html>
   <head>
-    <title id="documentTitle">Local World Clock 2025-09-09.0750</title>
+    <title id="documentTitle">Local World Clock 2025-09-09.1040</title>
     <link rel="stylesheet" href="lwc.css" />
     <link rel="icon" type="image/x-icon" href="LWC.ico" />
     <link rel="manifest" href="manifest.json">
-    <script type="text/javascript" src="lwc.js"></script>
+    <script type="text/javascript" src="lwc.js" charset="UTF-8"></script>
   </head>
   <body onload="initialize()">
 
@@ -13,17 +13,19 @@
       <div class="wc-local-date">Sat, Oct 9, 2021</div>
     </div>
 
+    <div class="settings-icon" onclick="toggleSettings()">&#9881;</div>
+
+    <div id="settings-panel" class="hidden">
+      <form onsubmit="addLocation(event)">
+        <input type="text" id="newName" placeholder="City Name" required>
+        <input type="text" id="newId" placeholder="Timezone ID" required>
+        <button type="submit">Add Location</button>
+      </form>
+      <p>To reorder, press, hold, and drag. Click "Remove" to show delete buttons.</p>
+      <button id="edit-button" onclick="toggleEditMode()">Remove</button>
+    </div>
+
     <div id="wc-list">
-      <div class="wc">
-        <div class="wc-l">
-          <div class="wc-tz-name">東京</div>
-          <div class="wc-tz-ofs">+16H</div>
-          <div class="wc-tz-id">Asia/Tokyo</div>
-        </div>
-        <div class="wc-r">
-          <div class="wc-time">13:12</div>
-        </div>
-      </div>
     </div>
   </body>
 </html>

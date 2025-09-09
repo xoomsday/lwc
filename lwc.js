@@ -1,3 +1,115 @@
+// Global state
+let locations = [];
+let editMode = false;
+let dragSrcEl = null;
+
+// Load locations from localStorage or use defaults
+function loadLocations() {
+    const storedLocations = localStorage.getItem('locations');
+    if (storedLocations) {
+        locations = JSON.parse(storedLocations);
+    } else {
+        locations = [
+            {name: "東京", id: "Asia/Tokyo" },
+            {name: "ロンドン", id: "Europe/London" },
+            {name: "UTC", id: "UTC" },
+            {name: "ニューヨーク", id: "America/New_York" },
+            {name: "ロサンゼルス", id: "America/Los_Angeles" },
+        ];
+    }
+}
+
+// Save locations to localStorage
+function saveLocations() {
+    localStorage.setItem('locations', JSON.stringify(locations));
+}
+
+// Toggle the settings panel
+function toggleSettings() {
+    const panel = document.getElementById('settings-panel');
+    panel.classList.toggle('hidden');
+}
+
+// Toggle edit mode for deleting clocks
+function toggleEditMode() {
+    editMode = !editMode;
+    const wcList = document.getElementById('wc-list');
+    const editButton = document.getElementById('edit-button');
+    if (editMode) {
+        wcList.classList.add('edit-mode');
+        editButton.textContent = 'Done';
+    } else {
+        wcList.classList.remove('edit-mode');
+        editButton.textContent = 'Remove';
+    }
+}
+
+// Add a new location
+function addLocation(event) {
+    event.preventDefault();
+    const newName = document.getElementById('newName').value;
+    const newId = document.getElementById('newId').value;
+    locations.push({ name: newName, id: newId });
+    saveLocations();
+    draw_clocks();
+    document.getElementById('newName').value = '';
+    document.getElementById('newId').value = '';
+}
+
+// Remove a location
+function removeLocation(index) {
+    locations.splice(index, 1);
+    saveLocations();
+    draw_clocks();
+}
+
+// Drag and drop functions
+function handleDragStart(e) {
+    this.style.opacity = '0.4';
+    dragSrcEl = this;
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', this.innerHTML);
+}
+
+function handleDragOver(e) {
+    if (e.preventDefault) {
+        e.preventDefault();
+    }
+    e.dataTransfer.dropEffect = 'move';
+    return false;
+}
+
+function handleDragEnter(e) {
+    this.classList.add('over');
+}
+
+function handleDragLeave(e) {
+    this.classList.remove('over');
+}
+
+function handleDrop(e) {
+    if (e.stopPropagation) {
+        e.stopPropagation();
+    }
+    if (dragSrcEl != this) {
+        const srcIndex = parseInt(dragSrcEl.dataset.index);
+        const destIndex = parseInt(this.dataset.index);
+        const item = locations.splice(srcIndex, 1)[0];
+        locations.splice(destIndex, 0, item);
+        saveLocations();
+        draw_clocks();
+    }
+    return false;
+}
+
+function handleDragEnd(e) {
+    this.style.opacity = '1';
+    const items = document.querySelectorAll('#wc-list .wc');
+    items.forEach(function (item) {
+        item.classList.remove('over');
+    });
+}
+
 function get_offset_minutes(tzId)
 {
     if (tzId === 'UTC')
@@ -96,14 +208,6 @@ function redraw_clock()
     reschedule(dt, millis);
 }
 
-const SAMPLE = [
-    {name: "東京", id: "Asia/Tokyo" },
-    {name: "ロンドン", id: "Europe/London" },
-    {name: "UTC", id: "UTC" },
-    {name: "ニューヨーク", id: "America/New_York" },
-    {name: "ロサンゼルス", id: "America/Los_Angeles" },
-];
-
 function new_elem_class_in(elemName, className, parent)
 {
     var elem = document.createElement(elemName);
@@ -112,14 +216,21 @@ function new_elem_class_in(elemName, className, parent)
     return elem;
 }
 
-function create_wc_widget(tzrow, localofs, now, parent)
+function create_wc_widget(tzrow, index, localofs, now, parent)
 {
     var wc = new_elem_class_in("div", "wc", parent);
+    wc.setAttribute('draggable', true);
+    wc.dataset.index = index;
+
     var wc_l = new_elem_class_in("div", "wc-l", wc);
 
     var wc_tz_name = new_elem_class_in("div", "wc-tz-name", wc_l);
     var wc_tz_ofs = new_elem_class_in("div", "wc-tz-ofs", wc_l);
     var wc_tz_id = new_elem_class_in("div", "wc-tz-id", wc_l);
+
+    var removeBtn = new_elem_class_in("button", "remove-button", wc);
+    removeBtn.textContent = 'X';
+    removeBtn.onclick = () => removeLocation(index);
 
     // Will be used to sort "wc"s later
     wc.myoffset = get_offset_minutes(tzrow.id);
@@ -141,7 +252,27 @@ function create_wc_widget(tzrow, localofs, now, parent)
         };
     })(wc, wc_time, wc_tz_id, wc.myoffset);
 
+    // Add drag and drop event listeners
+    wc.addEventListener('dragstart', handleDragStart, false);
+    wc.addEventListener('dragenter', handleDragEnter, false);
+    wc.addEventListener('dragover', handleDragOver, false);
+    wc.addEventListener('dragleave', handleDragLeave, false);
+    wc.addEventListener('drop', handleDrop, false);
+    wc.addEventListener('dragend', handleDragEnd, false);
+
     return wc;
+}
+
+function draw_clocks() {
+    var now = new Date();
+    var local_offset = now.getTimezoneOffset();
+    var wc_list = document.getElementById("wc-list");
+    while (wc_list.firstChild)
+        wc_list.removeChild(wc_list.firstChild);
+
+    locations.forEach((e, i) => {
+        create_wc_widget(e, i, local_offset, now, wc_list);
+    });
 }
 
 function initialize ()
@@ -158,15 +289,7 @@ function initialize ()
             );
     }
 
-    var now = new Date();
-    var local_offset = now.getTimezoneOffset();
-
-    var wc_list = document.getElementById("wc-list");
-    while (wc_list.firstChild)
-        wc_list.removeChild(wc_list.firstChild);
-
-    for (const e of SAMPLE)
-        wc = create_wc_widget(e, local_offset, now, wc_list);
-
+    loadLocations();
+    draw_clocks();
     redraw_clock();
 }
