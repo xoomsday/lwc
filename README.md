@@ -7,6 +7,9 @@ time and a list of world clocks for different timezones.
 
 *   Displays the current time and date for your local timezone.
 *   Shows a list of clocks for various cities around the world.
+*   Add new locations to the list.
+*   Remove existing locations from the list.
+*   Reorder locations by dragging and dropping.
 *   Works offline thanks to its service worker.
 *   Can be installed on your device as a PWA.
 
@@ -23,8 +26,11 @@ time and a list of world clocks for different timezones.
 The application is designed to be relocatable, so it can be served
 from any path on a web server.
 
-## Customization
+## Managing Locations
 
-Currently, the list of world clocks is hardcoded in `lwc.js`.
-Future versions will include a user interface to add, remove, and
-reorder the clocks.
+*   **Add a new location**: Click on the '+' button at the bottom right
+    to open a dialog where you can enter a new location.
+*   **Remove an existing location**: Click on the 'X' button next to
+    the location you want to remove.
+*   **Reorder the locations**: Press and hold the mouse button over a
+    location and drag it to a new position in the list.
