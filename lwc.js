@@ -1,23 +1,34 @@
-// Will be revamped when Temporal becomes available
-function parse_offset(tzrow)
+function get_offset_minutes(tzId)
 {
-    var match = tzrow.gmtofs.match(/^GMT([-+])([0-9]{2})([0-9]{2})$/);
+    if (tzId === 'UTC')
+        return 0;
+
+    const now = new Date();
+    const longOffsetString = new Intl.DateTimeFormat('en-US', {
+        timeZone: tzId,
+        timeZoneName: 'longOffset'
+    }).format(now);
+
+    const match = longOffsetString.match(/GMT([-+])(\d{1,2})(?::(\d{2}))?/);
     if (!match)
         return 0;
-    var sign = match[1];
-    var hour = match[2];
-    var minute = match[3];
-    minute = (parseInt(hour, 10) * 60 + parseInt(minute, 10));
-    if (sign == '-')
-        minute = 0 - minute;
-    return minute;
+
+    const sign = match[1];
+    const hour = parseInt(match[2], 10);
+    const minute = match[3] ? parseInt(match[3], 10) : 0;
+
+    let totalMinutes = hour * 60 + minute;
+    if (sign === '-')
+        totalMinutes = -totalMinutes;
+
+    return totalMinutes;
 }
 
 function abbrev_hours(minutes)
 {
     var hours = (minutes - (minutes % 60)) / 60;
     if (minutes % 60)
-        return `${hours}H${ninutes%60}`;
+        return `${hours}H${minutes%60}`;
     return `${hours}H`;
 }
 
@@ -86,11 +97,11 @@ function redraw_clock()
 }
 
 const SAMPLE = [
-    {name: "東京", id: "Asia/Tokyo", gmtofs: "GMT+0900" },
-    {name: "ロンドン", id: "Europe/London", gmtofs: "GMT+0000" }, // "GMT+0100"
-    {name: "UTC", id: "UTC", gmtofs: "GMT" },
-    {name: "ニューヨーク", id: "America/New_York", gmtofs: "GMT-0400" }, // GMT-0500
-    {name: "ロサンゼルス", id: "America/Los_Angeles", gmtofs: "GMT-0700" }, // GMT-0800
+    {name: "東京", id: "Asia/Tokyo" },
+    {name: "ロンドン", id: "Europe/London" },
+    {name: "UTC", id: "UTC" },
+    {name: "ニューヨーク", id: "America/New_York" },
+    {name: "ロサンゼルス", id: "America/Los_Angeles" },
 ];
 
 function new_elem_class_in(elemName, className, parent)
@@ -111,8 +122,7 @@ function create_wc_widget(tzrow, localofs, now, parent)
     var wc_tz_id = new_elem_class_in("div", "wc-tz-id", wc_l);
 
     // Will be used to sort "wc"s later
-    // Will be revamped when Temporal becomes available
-    wc.myoffset = parse_offset(tzrow);
+    wc.myoffset = get_offset_minutes(tzrow.id);
 
     wc_tz_name.textContent = tzrow.name;
     wc_tz_ofs.textContent = relative_offset_string(wc.myoffset, localofs);
