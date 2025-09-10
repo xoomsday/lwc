@@ -54,6 +54,9 @@ function addLocation(event) {
     draw_clocks();
     document.getElementById('newName').value = '';
     document.getElementById('newId').value = '';
+    const suggestionsPanel = document.getElementById('tz-suggestions');
+    suggestionsPanel.innerHTML = '';
+    suggestionsPanel.style.display = 'none';
 }
 
 // Remove a location
@@ -292,4 +295,42 @@ function initialize ()
     loadLocations();
     draw_clocks();
     redraw_clock();
+
+    const timezoneInput = document.getElementById('newId');
+    const suggestionsPanel = document.getElementById('tz-suggestions');
+    const timezones = Intl.supportedValuesOf('timeZone');
+
+    timezoneInput.addEventListener('input', () => {
+        const inputText = timezoneInput.value.toLowerCase();
+        suggestionsPanel.innerHTML = '';
+        if (inputText.length === 0) {
+            suggestionsPanel.style.display = 'none';
+            return;
+        }
+
+        const suggestions = timezones.filter(tz => tz.toLowerCase().includes(inputText));
+
+        suggestions.slice(0, 10).forEach(tz => {
+            const suggestionDiv = document.createElement('div');
+            suggestionDiv.textContent = tz;
+            suggestionDiv.classList.add('tz-suggestion');
+            suggestionDiv.addEventListener('click', () => {
+                timezoneInput.value = tz;
+                suggestionsPanel.style.display = 'none';
+            });
+            suggestionsPanel.appendChild(suggestionDiv);
+        });
+
+        if (suggestions.length > 0) {
+            suggestionsPanel.style.display = 'block';
+        } else {
+            suggestionsPanel.style.display = 'none';
+        }
+    });
+
+    document.addEventListener('click', (e) => {
+        if (e.target !== timezoneInput && e.target.parentNode !== suggestionsPanel) {
+            suggestionsPanel.style.display = 'none';
+        }
+    });
 }

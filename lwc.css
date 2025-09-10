@@ -64,21 +64,73 @@ div.wc > div.wc-r > div.wc-time {
 
 #settings-panel {
     padding: 20px;
-    background-color: #333;
+    background-color: #2a2a2a;
     border-top: 1px solid #444;
+    transition: all 0.3s ease-in-out;
 }
 
 #settings-panel.hidden {
     display: none;
 }
 
+#settings-panel form {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    position: relative;
+}
+
 #settings-panel input, #settings-panel button {
     font-size: 12pt;
     margin: 5px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #555;
+    background-color: #333;
+    color: #ccc;
 }
 
+#settings-panel button {
+    cursor: pointer;
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+}
+
+#settings-panel button:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+
 #settings-panel p {
+    color: #aaa;
+    font-size: 10pt;
+    margin-bottom: 10px;
+}
+
+#tz-suggestions {
+    max-height: 150px;
+    overflow-y: auto;
+    background-color: #444;
+    border: 1px solid #555;
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 185px;
+    width: 185px;
+    z-index: 10;
+}
+
+
+.tz-suggestion {
+    padding: 8px;
+    cursor: pointer;
     color: #ccc;
+}
+
+.tz-suggestion:hover {
+    background-color: #555;
 }
 
 .remove-button {
