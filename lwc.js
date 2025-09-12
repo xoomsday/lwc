@@ -49,6 +49,12 @@ function addLocation(event) {
     event.preventDefault();
     const newName = document.getElementById('newName').value;
     const newId = document.getElementById('newId').value;
+    try {
+        new Intl.DateTimeFormat('en-US', { timeZone: newId });
+    } catch (e) {
+        alert(`'${newId}' is not a valid timezone.`);
+        return;
+    }
     locations.push({ name: newName, id: newId });
     saveLocations();
     draw_clocks();
@@ -235,25 +241,32 @@ function create_wc_widget(tzrow, index, localofs, now, parent)
     removeBtn.textContent = 'X';
     removeBtn.onclick = () => removeLocation(index);
 
-    // Will be used to sort "wc"s later
-    wc.myoffset = get_offset_minutes(tzrow.id);
+    try {
+        // Will be used to sort "wc"s later
+        wc.myoffset = get_offset_minutes(tzrow.id);
 
-    wc_tz_name.textContent = tzrow.name;
-    wc_tz_ofs.textContent = relative_offset_string(wc.myoffset, localofs);
-    wc_tz_id.textContent = tzrow.id;
+        wc_tz_name.textContent = tzrow.name;
+        wc_tz_ofs.textContent = relative_offset_string(wc.myoffset, localofs);
+        wc_tz_id.textContent = tzrow.id;
 
-    var wc_r = new_elem_class_in("div", "wc-r", wc);
-    var wc_time = new_elem_class_in("div", "wc-time", wc_r);
+        var wc_r = new_elem_class_in("div", "wc-r", wc);
+        var wc_time = new_elem_class_in("div", "wc-time", wc_r);
 
-    wc.mydraw = ((me, timeWidget, tzIdWidget, tzoffset) => {
-        return (instant) => {
-            var dt = new Date();
-            dt.setTime(instant + tzoffset * 60 * 1000);
-            dt = dt.toISOString();
-            dt = dt.substr(dt.indexOf('T') + 1, 5);
-            timeWidget.textContent = `${dt}`;
-        };
-    })(wc, wc_time, wc_tz_id, wc.myoffset);
+        wc.mydraw = ((me, timeWidget, tzIdWidget, tzoffset) => {
+            return (instant) => {
+                var dt = new Date();
+                dt.setTime(instant + tzoffset * 60 * 1000);
+                dt = dt.toISOString();
+                dt = dt.substr(dt.indexOf('T') + 1, 5);
+                timeWidget.textContent = `${dt}`;
+            };
+        })(wc, wc_time, wc_tz_id, wc.myoffset);
+    } catch (e) {
+        wc.classList.add("invalid");
+        wc_tz_name.textContent = tzrow.name;
+        wc_tz_id.textContent = `${tzrow.id} (invalid)`;
+        wc.mydraw = () => {}; // empty mydraw
+    }
 
     // Add drag and drop event listeners
     wc.addEventListener('dragstart', handleDragStart, false);
