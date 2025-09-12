@@ -100,7 +100,6 @@ function handleDrop(e) {
         const item = locations.splice(srcIndex, 1)[0];
         locations.splice(destIndex, 0, item);
         saveLocations();
-        draw_clocks();
     }
     return false;
 }
@@ -111,6 +110,7 @@ function handleDragEnd(e) {
     items.forEach(function (item) {
         item.classList.remove('over');
     });
+    draw_clocks();
 }
 
 function get_offset_minutes(tzId)
