@@ -28,21 +28,15 @@ function saveLocations() {
 function toggleSettings() {
     const panel = document.getElementById('settings-panel');
     panel.classList.toggle('hidden');
-}
-
-// Toggle edit mode for deleting clocks
-function toggleEditMode() {
-    editMode = !editMode;
     const wcList = document.getElementById('wc-list');
-    const editButton = document.getElementById('edit-button');
-    if (editMode) {
-        wcList.classList.add('edit-mode');
-        editButton.textContent = 'Done';
-    } else {
+    if (panel.classList.contains('hidden')) {
         wcList.classList.remove('edit-mode');
-        editButton.textContent = 'Remove';
+    } else {
+        wcList.classList.add('edit-mode');
     }
 }
+
+
 
 // Add a new location
 function addLocation(event) {
