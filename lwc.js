@@ -24,6 +24,71 @@ function saveLocations() {
     localStorage.setItem('locations', JSON.stringify(locations));
 }
 
+// Font size adjustment
+const fontSizes = [
+    {
+        '--wc-local-clock-font-size': '40pt',
+        '--wc-local-date-font-size': '12pt',
+        '--wc-tz-name-font-size': '12pt',
+        '--wc-tz-ofs-font-size': '10pt',
+        '--wc-tz-id-font-size': '10pt',
+        '--wc-time-font-size': '30pt',
+    },
+    {
+        '--wc-local-clock-font-size': '60pt',
+        '--wc-local-date-font-size': '16pt',
+        '--wc-tz-name-font-size': '16pt',
+        '--wc-tz-ofs-font-size': '12pt',
+        '--wc-tz-id-font-size': '12pt',
+        '--wc-time-font-size': '40pt',
+    },
+    {
+        '--wc-local-clock-font-size': '80pt',
+        '--wc-local-date-font-size': '20pt',
+        '--wc-tz-name-font-size': '20pt',
+        '--wc-tz-ofs-font-size': '16pt',
+        '--wc-tz-id-font-size': '16pt',
+        '--wc-time-font-size': '50pt',
+    },
+];
+
+let currentFontSizeIndex = 1;
+
+function applyFontSize(index) {
+    const size = fontSizes[index];
+    for (const [key, value] of Object.entries(size)) {
+        document.documentElement.style.setProperty(key, value);
+    }
+}
+
+function saveFontSize() {
+    localStorage.setItem('fontSizeIndex', currentFontSizeIndex);
+}
+
+function loadFontSize() {
+    const savedIndex = localStorage.getItem('fontSizeIndex');
+    if (savedIndex !== null) {
+        currentFontSizeIndex = parseInt(savedIndex, 10);
+    }
+    applyFontSize(currentFontSizeIndex);
+}
+
+function increaseFontSize() {
+    if (currentFontSizeIndex < fontSizes.length - 1) {
+        currentFontSizeIndex++;
+        applyFontSize(currentFontSizeIndex);
+        saveFontSize();
+    }
+}
+
+function decreaseFontSize() {
+    if (currentFontSizeIndex > 0) {
+        currentFontSizeIndex--;
+        applyFontSize(currentFontSizeIndex);
+        saveFontSize();
+    }
+}
+
 // Toggle the settings panel
 function toggleSettings() {
     const panel = document.getElementById('settings-panel');
@@ -287,6 +352,7 @@ function draw_clocks() {
 
 function initialize ()
 {
+    loadFontSize();
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js').
             then(

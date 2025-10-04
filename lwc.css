@@ -1,3 +1,12 @@
+:root {
+    --wc-local-clock-font-size: 60pt;
+    --wc-local-date-font-size: 16pt;
+    --wc-tz-name-font-size: 16pt;
+    --wc-tz-ofs-font-size: 12pt;
+    --wc-tz-id-font-size: 12pt;
+    --wc-time-font-size: 40pt;
+}
+
 body {
     background-color: #000;
     margin: 0px;
@@ -11,11 +20,11 @@ div.wc-local {
 }
 div.wc-local-clock {
     padding: 15px;
-    font-size: 60pt;
+    font-size: var(--wc-local-clock-font-size);
 }
 div.wc-local-date {
     padding: 0px 15px 15px;
-    font-size: 16pt;
+    font-size: var(--wc-local-date-font-size);
 }
 div.wc {
     position: relative;
@@ -32,15 +41,15 @@ div.wc > div.wc-l {
     left: 20px;
 }
 div.wc > div.wc-l > div.wc-tz-name {
-    font-size: 16pt;
+    font-size: var(--wc-tz-name-font-size);
     text-align: left;
 }
 div.wc > div.wc-l > div.wc-tz-ofs {
-    font-size: 12pt;
+    font-size: var(--wc-tz-ofs-font-size);
     text-align: left;
 }
 div.wc > div.wc-l > div.wc-tz-id {
-    font-size: 12pt;
+    font-size: var(--wc-tz-id-font-size);
     text-align: left;
 }
 div.wc > div.wc-r {
@@ -49,7 +58,7 @@ div.wc > div.wc-r {
     right: 20px;
 }
 div.wc > div.wc-r > div.wc-time {
-    font-size: 40pt;
+    font-size: var(--wc-time-font-size);
     text-align: right;
 }
 
@@ -107,6 +116,23 @@ div.wc > div.wc-r > div.wc-time {
     color: #aaa;
     font-size: 10pt;
     margin-bottom: 10px;
+}
+
+.font-controls {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.font-controls button {
+    font-size: 16pt;
+    margin: 0 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid #555;
+    background-color: #333;
+    color: #ccc;
 }
 
 #tz-suggestions {
