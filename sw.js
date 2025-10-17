@@ -1,40 +1,72 @@
-var CACHE = 'lwc-cache-25';
+var CACHE_SERIAL = '1';
+var CACHE_BASE = 'lwc-cache-';
+var CACHE_NAME = CACHE_BASE + CACHE_SERIAL;
 
-self.addEventListener('install', event => {
-    event.waitUntil(precache());
+const assetsToCache = [
+  './',
+  './LocalWorldClock.html',
+  './lwc.css',
+  './LWC.ico',
+  './lwc.js',
+  './LWC.png',
+  './manifest.json',
+];
+
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then((cache) => {
+        console.log('Opened cache');
+        return cache.addAll(assetsToCache);
+      })
+  );
 });
 
-self.addEventListener('fetch', event => {
-    event.respondWith(fromCache(event.request));
-    event.waitUntil(update(event.request));
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    caches.match(event.request)
+      .then((response) => {
+        // Cache hit - return response
+        if (response) {
+          return response;
+        }
+
+        // Clone the request because it's a stream and can only be consumed once
+        const fetchRequest = event.request.clone();
+
+        return fetch(fetchRequest).then(
+          (response) => {
+            // Check if we received a valid response
+            if (!response || response.status !== 200 || response.type !== 'basic') {
+              return response;
+            }
+
+            // Clone the response because it's a stream and can only be consumed once
+            const responseToCache = response.clone();
+
+            caches.open(CACHE_NAME)
+              .then((cache) => {
+                cache.put(event.request, responseToCache);
+              });
+
+            return response;
+          }
+        );
+      })
+  );
 });
 
-function precache() {
-    return caches.open(CACHE).then(cache => {
-        return cache.addAll([
-            "./LocalWorldClock.html",
-            "./lwc.css",
-            "./LWC.ico",
-            "./lwc.js",
-            "./LWC.png",
-            "./manifest.json",
-            "./sw.js",
-        ]);
-    });
-}
-
-function fromCache(request) {
-    return caches.open(CACHE).then(cache => {
-        return cache.match(request).then(matching => {
-            return matching || Promise.reject('no-match');
-        });
-    });
-}
-
-function update(request) {
-    return caches.open(CACHE).then(cache => {
-        return fetch(request).then(response => {
-            return cache.put(request, response);
-        });
-    });
-}
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+	  if (cacheName.startsWith(CACHE_BASE) &&
+	      cacheName != CACHE_NAME) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
+});
