@@ -2,6 +2,9 @@ body {
     background-color: #000;
     margin: 0px;
     padding: 0px;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
 }
 div.wc-local {
     text-align: left;
@@ -168,4 +171,9 @@ div.wc > div.wc-r > div.wc-time {
     #settings-panel input, #settings-panel button {
         width: auto;
     }
+}
+
+#wc-list {
+    overflow-y: auto;
+    flex-grow: 1;
 }
