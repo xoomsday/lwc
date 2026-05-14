@@ -1,4 +1,4 @@
-var CACHE_SERIAL = '1';
+var CACHE_SERIAL = '3';
 var CACHE_BASE = 'lwc-cache-';
 var CACHE_NAME = CACHE_BASE + CACHE_SERIAL;
 
